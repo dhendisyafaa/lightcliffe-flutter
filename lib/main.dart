@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:slicing_ui/book_shop.dart';
+import 'package:slicing_ui/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +14,6 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        home: BookShop());
+        home: SplashScreen());
   }
 }
