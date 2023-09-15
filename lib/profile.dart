@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:slicing_ui/screens/splash_screen.dart';
+import "package:get/get.dart";
+import 'package:slicing_ui/controllers/profile_controller.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -9,10 +10,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String fullName = '';
-  String email = '';
-  String password = '';
-  String numberPhone = '';
   String dropdownProvinsi = 'Jawa Barat';
   String dropdownKota = 'Bandung';
   bool agree = false;
@@ -61,6 +58,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Expanded formProfile(BuildContext context) {
+    ProfileController profileController = Get.put(ProfileController());
     return Expanded(
         child: ListView(
       children: [
@@ -94,9 +92,7 @@ class _ProfileState extends State<Profile> {
                         border: Border(
                             bottom: BorderSide(color: Colors.grey.shade200))),
                     child: TextField(
-                      onChanged: (String? newValue) => setState(() {
-                        fullName = newValue!;
-                      }),
+                      controller: profileController.setFullName,
                       decoration: const InputDecoration(
                           hintText: "Nama Lengkap",
                           hintStyle: TextStyle(color: Colors.grey),
@@ -124,9 +120,7 @@ class _ProfileState extends State<Profile> {
                         border: Border(
                             bottom: BorderSide(color: Colors.grey.shade200))),
                     child: TextField(
-                      onChanged: (String? newValue) => setState(() {
-                        email = newValue!;
-                      }),
+                      controller: profileController.setEmail,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                           hintText: "Email",
@@ -155,9 +149,7 @@ class _ProfileState extends State<Profile> {
                         border: Border(
                             bottom: BorderSide(color: Colors.grey.shade200))),
                     child: TextField(
-                      onChanged: (String? newValue) => setState(() {
-                        password = newValue!;
-                      }),
+                      controller: profileController.setPassword,
                       obscureText: true,
                       enableSuggestions: false,
                       autocorrect: false,
@@ -276,9 +268,7 @@ class _ProfileState extends State<Profile> {
                         border: Border(
                             bottom: BorderSide(color: Colors.grey.shade200))),
                     child: TextField(
-                      onChanged: (String? newValue) => setState(() {
-                        numberPhone = newValue!;
-                      }),
+                      controller: profileController.setNumberPhone,
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                           hintText: "No. Telp",
@@ -312,17 +302,21 @@ class _ProfileState extends State<Profile> {
                           borderRadius: BorderRadius.circular(20)),
                       backgroundColor: Colors.pinkAccent,
                     ),
-                    onPressed: fullName.isNotEmpty &&
-                            email.isNotEmpty &&
-                            password.isNotEmpty &&
-                            numberPhone.isNotEmpty &&
+                    onPressed: profileController.setFullName.text.isNotEmpty &&
+                            profileController.setEmail.text.isNotEmpty &&
+                            profileController.setPassword.text.isNotEmpty &&
+                            profileController.setNumberPhone.text.isNotEmpty &&
                             agree
                         ? () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const SplashScreen(),
-                              ),
-                            );
+                            profileController.setProfile(
+                                profileController.setFullName.text,
+                                profileController.setEmail.text,
+                                profileController.setPassword.text,
+                                profileController.setNumberPhone.text);
+                            Get.snackbar("Berhasil Melengkapi Data Diri!",
+                                "Anda dapat memilih buku favorit sesuai kategori yang Anda pilih");
+                            Get.toNamed('/homepage',
+                                arguments: profileController.setFullName.text);
                           }
                         : null,
                     child: const Text('Simpan Data Diri'))
